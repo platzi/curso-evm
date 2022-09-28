@@ -1,4 +1,9 @@
-import { StackOverflow, StackUnderflow, InvalidStackValue } from "./errors";
+import {
+  StackOverflow,
+  StackUnderflow,
+  InvalidStackValue,
+  IndexOutOfBounds,
+} from "./errors";
 import { MAX_UINT256 } from "../../constants";
 import { hexlify } from "@ethersproject/bytes";
 
@@ -25,6 +30,30 @@ class Stack {
     if (value === undefined) throw new StackUnderflow();
 
     return value;
+  }
+
+  public duplicate(index: number): void {
+    const value = this.stack[this.toStackIndex(index)];
+    if (value === undefined) throw new IndexOutOfBounds();
+    this.stack.push(value);
+  }
+
+  public swap(indexA: number, indexB: number): void {
+    const adjustedIndexA = this.toStackIndex(indexA);
+    const adjustedIndexB = this.toStackIndex(indexB);
+
+    const a = this.stack[adjustedIndexA];
+    if (a === undefined) throw new IndexOutOfBounds();
+    
+    const b = this.stack[adjustedIndexB];
+    if (b === undefined) throw new IndexOutOfBounds();
+
+    this.stack[adjustedIndexA] = b;
+    this.stack[adjustedIndexB] = a;
+  }
+
+  private toStackIndex(index: number) {
+    return this.stack.length - index;
   }
 
   public print(): void {

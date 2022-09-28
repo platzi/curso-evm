@@ -8,4 +8,6 @@ class StackOverflow extends Error {}
 
 class StackUnderflow extends Error {}
 
-export { InvalidStackValue, StackOverflow, StackUnderflow };
+class IndexOutOfBounds extends Error {}
+
+export { InvalidStackValue, StackOverflow, StackUnderflow, IndexOutOfBounds };

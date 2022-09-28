@@ -15,6 +15,7 @@ class ExecutionContext {
   public memory: Memory;
   private pc: number;
   private stopped: boolean;
+  public output: bigint = BigInt(0);
 
   constructor(code: string) {
     if (!isHexString(code) || code.length % 2 !== 0)
@@ -43,6 +44,8 @@ class ExecutionContext {
       this.stack.print();
       console.log("");
     }
+
+    console.log("Output:\t", hexlify(this.output));
   }
 
   private fetchInstruction(): Instruction {
