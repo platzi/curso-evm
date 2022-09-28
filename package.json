@@ -1,0 +1,16 @@
+{
+  "name": "pvm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.7.23",
+    "typescript": "^4.8.4"
+  }
+}
