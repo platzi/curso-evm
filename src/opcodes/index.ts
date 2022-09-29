@@ -9,6 +9,7 @@ import Instruction from "../classes/instruction";
 
 const Opcodes: {
   0: Instruction;
+  0x5b: Instruction;
   [key: number]: Instruction | undefined;
 } = {
   0x00: new Instruction(0x00, "STOP", (ctx: ExecutionContext) => ctx.stop()),
@@ -100,9 +101,15 @@ const Opcodes: {
       bigIntToBuffer(value)
     );
   }),
-  0x56: new Instruction(0x56, "JUMP"),
-  0x57: new Instruction(0x57, "JUMPI"),
-  0x5b: new Instruction(0x5b, "JUMPDEST"),
+  0x56: new Instruction(0x56, "JUMP", (ctx: ExecutionContext) => {
+    const destination = ctx.stack.pop();
+    ctx.jump(destination);
+  }),
+  0x57: new Instruction(0x57, "JUMPI", (ctx: ExecutionContext) => {
+    const [destination, b] = [ctx.stack.pop(), ctx.stack.pop()]
+    if(Boolean(b)) ctx.jump(destination)
+  }),
+  0x5b: new Instruction(0x5b, "JUMPDEST", () => undefined),
   0x60: new Instruction(0x60, "PUSH1", (ctx: ExecutionContext) => {
     ctx.stack.push(ctx.readBytesFromCode(1));
   }),

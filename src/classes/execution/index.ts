@@ -6,6 +6,7 @@ import Memory from "../memory";
 import Stack from "../stack";
 import {
   InvalidBytecode,
+  InvalidJump,
   InvalidProgramCounterIndex,
   UnknownOpcode,
 } from "./errors";
@@ -73,6 +74,15 @@ class ExecutionContext {
     this.pc += bytes;
 
     return values;
+  }
+
+  public jump(destination: bigint): void {
+    if (!this.isValidJump(destination)) throw new InvalidJump();
+    this.pc = Number(destination);
+  }
+
+  private isValidJump(destination: bigint): boolean {
+    return this.code[Number(destination) - 1] === Opcodes[0x5b].opcode;
   }
 }
 
