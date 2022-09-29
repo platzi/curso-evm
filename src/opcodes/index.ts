@@ -41,7 +41,13 @@ const Opcodes: {
   0x0a: new Instruction(
     0x0a,
     "EXP",
-    async (ctx: ExecutionContext) => 1,
+    async (ctx: ExecutionContext) => {
+      const staticGas = 10;
+      const exponent = ctx.stack.getAtIndex(2);
+      const sizeOfExponent = arrayify(Number(exponent)).length;
+      const dynamicGas = sizeOfExponent * 50;
+      return staticGas + dynamicGas;
+    },
     (ctx: ExecutionContext) => {
       const [a, exponent] = [ctx.stack.pop(), ctx.stack.pop()];
       const result = a ** exponent;
@@ -89,7 +95,12 @@ const Opcodes: {
   0x51: new Instruction(
     0x51,
     "MLOAD",
-    async (ctx: ExecutionContext) => 1,
+    async (ctx: ExecutionContext) => {
+      const offset = ctx.stack.getAtIndex(1);
+      const dynamicGas = ctx.memory.memoryExpansionCost(offset);
+      const staticGas = BigInt(3);
+      return Number(staticGas + dynamicGas);
+    },
     (ctx: ExecutionContext) => {
       const offset = ctx.stack.pop();
       ctx.stack.push(ctx.memory.load(offset));
@@ -98,7 +109,12 @@ const Opcodes: {
   0x52: new Instruction(
     0x52,
     "MSTORE",
-    async (ctx: ExecutionContext) => 1,
+    async (ctx: ExecutionContext) => {
+      const offset = ctx.stack.getAtIndex(1);
+      const dynamicGas = ctx.memory.memoryExpansionCost(offset);
+      const staticGas = BigInt(3);
+      return Number(staticGas + dynamicGas);
+    },
     (ctx: ExecutionContext) => {
       const [offset, value] = [ctx.stack.pop(), ctx.stack.pop()];
       ctx.memory.store(offset, value);
@@ -107,7 +123,13 @@ const Opcodes: {
   0x54: new Instruction(
     0x54,
     "SLOAD",
-    async (ctx: ExecutionContext) => 1,
+    async (ctx: ExecutionContext) => {
+      const key = ctx.stack.getAtIndex(1);
+      const value = await ctx.storage.get(
+        setLengthLeft(bigIntToBuffer(key), 32)
+      );
+      return value === null ? 2100 : 100;
+    },
     async (ctx: ExecutionContext) => {
       const key = ctx.stack.pop();
       const value = await ctx.storage.get(

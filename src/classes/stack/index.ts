@@ -39,21 +39,26 @@ class Stack {
   }
 
   public swap(indexA: number, indexB: number): void {
-    const adjustedIndexA = this.toStackIndex(indexA);
-    const adjustedIndexB = this.toStackIndex(indexB);
+    const a = this.getAtIndex(indexA);
+    const b = this.getAtIndex(indexB);
 
-    const a = this.stack[adjustedIndexA];
-    if (a === undefined) throw new IndexOutOfBounds();
-    
-    const b = this.stack[adjustedIndexB];
-    if (b === undefined) throw new IndexOutOfBounds();
-
-    this.stack[adjustedIndexA] = b;
-    this.stack[adjustedIndexB] = a;
+    this.setAtIndex(indexA, b);
+    this.setAtIndex(indexB, a);
   }
 
   private toStackIndex(index: number) {
     return this.stack.length - index;
+  }
+
+  public getAtIndex(index: number): bigint {
+    const adjustedIndex = this.toStackIndex(index);
+    const value = this.stack[adjustedIndex];
+    if (value === undefined) throw new IndexOutOfBounds();
+    return value;
+  }
+
+  public setAtIndex(index: number, value: bigint) {
+    this.stack[this.toStackIndex(index)] = value;
   }
 
   public print(): void {
