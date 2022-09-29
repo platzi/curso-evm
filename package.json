@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src"
+    "pvm": "ts-node ./src/cli"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "@ethereumjs/util": "^8.0.0",
     "@ethersproject/bytes": "^5.7.0",
     "abstract-level": "^1.0.3",
+    "command-line-interface": "^5.0.0",
     "level": "^8.0.0",
     "memory-level": "^1.0.0"
   }
